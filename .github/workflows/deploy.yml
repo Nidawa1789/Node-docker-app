@@ -1,68 +1,19 @@
-name: Deploy to EC2
+name: Test SSH EC2
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  deploy:
+  ssh-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Copy files to EC2 via SSH
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "."
-          target: "~/app"
-        continue-on-error: false
-
-      - name: SSH into EC2 and run Docker
+      - name: Test SSH connection and run uptime
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/app
-            docker build -t node-app .
-            docker stop node-app || true
-            docker rm node-app || true
-            docker run -d -p 80:3000 --name node-app node-app
-        continue-on-error: false
-
-      - name: Health check
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            for i in {1..5}; do
-              if curl -f http://localhost:80/health; then
-                echo "Application is healthy"
-                exit 0
-              fi
-              echo "Attempt $i: Application not ready yet..."
-              sleep 10
-            done
-            echo "Application failed to start properly"
-            exit 1
-        continue-on-error: false
-
-      - name: Notify on failure
-        if: failure()
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "Deployment failed. Please check the logs for more information."
-            docker logs node-app
+            echo "✅ Connected to EC2!"
+            uptime
