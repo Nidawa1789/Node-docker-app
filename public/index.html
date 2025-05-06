@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CI/CD – Wagué Madani – Docker → EC2</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #2E86DE;
+      --secondary-color: #192A56;
+      --accent-color: #FF9F43;
+      --aws-color: #FF9900;
+      --github-color: #24292E;
+      --text-color: #333;
+      --light-bg: #f4f4f9;
+      --dark-bg: #2C3A47;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--light-bg);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="none"/><circle cx="3" cy="3" r="1" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .school-info {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+
+    .mission-title {
+      color: var(--accent-color);
+      font-size: 1.5rem;
+      margin: 2rem 0 1rem;
+    }
+
+    .tech-stack {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+    }
+
+    .tech-icon {
+      font-size: 2.5rem;
+      color: white;
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tech-icon span {
+      font-size: 0.9rem;
+    }
+
+    .tech-icon:hover {
+      transform: translateY(-5px);
+    }
+
+    .workflow-section {
+      background: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .workflow-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+    }
+
+    .step {
+      padding: 2rem;
+      border-radius: 10px;
+      background: var(--light-bg);
+      position: relative;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .step:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-5px);
+    }
+
+    .step-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--primary-color);
+    }
+
+    .team-section {
+      padding: 4rem 2rem;
+      text-align: center;
+      background: var(--light-bg);
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+    }
+
+    .member-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .member-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .member-role {
+      color: var(--primary-color);
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+
+    .deliverables {
+      background: white;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+
+    .deliverable-list {
+      max-width: 800px;
+      margin: 2rem auto;
+      text-align: left;
+    }
+
+    .deliverable-item {
+      padding: 1rem;
+      margin: 1rem 0;
+      background: var(--light-bg);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .deliverable-icon {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+
+    footer {
+      background: var(--dark-bg);
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .social-links {
+      margin-top: 1rem;
+    }
+
+    .social-links a {
+      color: white;
+      margin: 0 10px;
+      font-size: 1.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .social-links a:hover {
+      color: var(--accent-color);
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .tech-stack {
+        flex-wrap: wrap;
+      }
+      
+      .workflow-steps {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-content">
+      <p class="school-info">Université Sup’Management Mali – Virtualisation & Cloud Computing</p>
+      <h1>Projet Final – CI/CD Docker → EC2</h1>
+      <p class="mission-title">Objectif</p>
+      <p>Mettre en place une chaîne CI/CD pour une application Node.js Dockerisée, déployée automatiquement sur EC2 via GitHub Actions.</p>
+      <div class="tech-stack">
+        <div class="tech-icon"><i class="fab fa-github"></i><span>GitHub Actions</span></div>
+        <div class="tech-icon"><i class="fab fa-docker"></i><span>Docker</span></div>
+        <div class="tech-icon"><i class="fab fa-aws"></i><span>AWS EC2</span></div>
+        <div class="tech-icon"><i class="fas fa-server"></i><span>Node.js</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="workflow-section">
+    <h2>Pipeline CI/CD</h2>
+    <div class="workflow-steps">
+      <div class="step">
+        <i class="fas fa-code-branch step-icon"></i>
+        <h3>1. Développement</h3>
+        <p>Modifications du code Node.js & Dockerfile sur la branche principale</p>
+      </div>
+      <div class="step">
+        <i class="fas fa-sync step-icon"></i>
+        <h3>2. GitHub Actions</h3>
+        <p>Déclenchement automatique du workflow au push sur <code>main</code></p>
+      </div>
+      <div class="step">
+        <i class="fas fa-server step-icon"></i>
+        <h3>3. Déploiement EC2</h3>
+        <p>SCP + SSH → build/container run sur EC2</p>
+      </div>
+      <div class="step">
+        <i class="fas fa-undo step-icon"></i>
+        <h3>4. Rollback</h3>
+        <p>Rollback automatique si Health Check échoue</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <h2>Réalisé par</h2>
+    <div class="team-grid">
+      <div class="member-card">
+        <h3>Wagué Madani</h3>
+        <p class="member-role">Chef de projet & DevOps</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="deliverables">
+    <h2>Livrables</h2>
+    <div class="deliverable-list">
+      <div class="deliverable-item"><i class="fas fa-file-code deliverable-icon"></i><p><strong>deploy.yml</strong> – Workflow GitHub Actions</p></div>
+      <div class="deliverable-item"><i class="fas fa-docker deliverable-icon"></i><p><strong>Dockerfile</strong> & script de déploiement</p></div>
+      <div class="deliverable-item"><i class="fas fa-server deliverable-icon"></i><p><strong>Logs</strong> & documentation du rollback</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Sup’Management Mali – Module Virtualisation & Cloud Computing</p>
+    <p>Encadré par Ibrahim Balako SAMAKE</p>
+    <div class="social-links">
+      <a href="https://github.com/Nidawa1789/node-docker-app" target="_blank"><i class="fab fa-github"></i></a>
+    </div>
+  </footer>
+
+</body>
+</html>
