@@ -23,7 +23,7 @@ jobs:
           target: "~/app"
         continue-on-error: false
 
-      - name: SSH into EC2 and run Docker
+      - name: SSH into EC2 and build & deploy Docker
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -31,9 +31,14 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/app
+            # Tag current version for rollback
+            docker tag node-app node-app:rollback || true
+            # Build new image
             docker build -t node-app .
+            # Stop & remove old container
             docker stop node-app || true
             docker rm node-app || true
+            # Run new container
             docker run -d -p 80:3000 --name node-app node-app
         continue-on-error: false
 
@@ -56,6 +61,20 @@ jobs:
             exit 1
         continue-on-error: false
 
+      - name: Rollback on failure
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🔄 Rolling back to previous version"
+            docker stop node-app || true
+            docker rm node-app || true
+            docker run -d -p 80:3000 --name node-app node-app:rollback
+            echo "✅ Rollback complete"
+
       - name: Notify on failure
         if: failure()
         uses: appleboy/ssh-action@v1.0.0
@@ -64,5 +83,5 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            echo "Deployment failed. Please check the logs for more information."
+            echo "🚨 Deployment failed. Check rollback status and logs."
             docker logs node-app
