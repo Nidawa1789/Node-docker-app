@@ -236,10 +236,10 @@
 
   <section class="hero">
     <div class="hero-content">
-      <p class="school-info">Université Sup’Management Mali – Virtualisation & Cloud Computing</p>
-      <h1>Projet Final – CI/CD Docker → EC2</h1>
+      <p class="school-info">Université Sup'Management Mali</p>
+      <h1>Projet Mémoire</h1>
       <p class="mission-title">Objectif</p>
-      <p>Mettre en place une chaîne CI/CD pour une application Node.js Dockerisée, déployée automatiquement sur EC2 via GitHub Actions.</p>
+      <p>Mis en place une chaîne CI/CD pour une application Node.js Dockerisée, déployée automatiquement sur EC2 via GitHub Actions.</p>
       <div class="tech-stack">
         <div class="tech-icon"><i class="fab fa-github"></i><span>GitHub Actions</span></div>
         <div class="tech-icon"><i class="fab fa-docker"></i><span>Docker</span></div>
@@ -248,6 +248,195 @@
       </div>
     </div>
   </section>
+
+  <!-- 🧠 Assistant IA amélioré -->
+  <section class="workflow-section" style="background-color: var(--light-bg);">
+    <h2>Assistant IA – Pose une question</h2>
+    <div class="chat-container">
+      <div id="chat-box" class="chat-box"></div>
+      <div class="chat-input-area">
+        <input id="chat-input" type="text" placeholder="Pose ta question ici...">
+        <button onclick="sendChat()">Envoyer</button>
+        <button onclick="resetChat()" style="background: var(--accent-color);">🗑️ Réinitialiser</button>
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .chat-box {
+      height: 280px;
+      overflow-y: auto;
+      padding: 1rem;
+      background: #f9f9fc;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .chat-input-area {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      padding: 0.7rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .chat-input-area button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 0.7rem 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .chat-input-area button:hover {
+      background: var(--secondary-color);
+    }
+
+    .message {
+      margin-bottom: 0.8rem;
+      padding: 0.6rem 0.9rem;
+      border-radius: 15px;
+      max-width: 80%;
+      word-wrap: break-word;
+      font-size: 0.95rem;
+    }
+
+    .bot {
+      background-color: #e6f0fb;
+      color: var(--primary-color);
+      text-align: left;
+      border-bottom-left-radius: 0;
+    }
+
+    .user {
+      background-color: #d1f8ff;
+      color: #222;
+      text-align: right;
+      margin-left: auto;
+      border-bottom-right-radius: 0;
+    }
+  </style>
+
+  <script>
+    const chatBox = document.getElementById("chat-box");
+
+    function appendMessage(role, text) {
+      const div = document.createElement("div");
+      div.classList.add("message", role === "user" ? "user" : "bot");
+      div.textContent = text;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendChat() {
+      const input = document.getElementById("chat-input");
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendMessage("user", message);
+      input.value = "";
+
+      setTimeout(() => {
+        appendMessage("bot", getResponse(message));
+      }, 400);
+    }
+
+    function getResponse(msg) {
+      msg = msg.toLowerCase();
+      // GitHub & CI/CD
+      if (msg.includes("bonjour") || msg.includes("salut") || msg.includes("cv") || msg.includes("hello"))
+        return "Bonjour ! Je suis L'assistant IA de l'Université Sup'Management Mali. Comment puis-je vous aider ?";
+      if (msg.includes("github") || msg.includes("action") || msg.includes("repo") || msg.includes("repository"))
+        return "GitHub Actions déclenche automatiquement le pipeline CI/CD à chaque modification du code. Le repository héberge le code source et l'historique des versions.";
+      if (msg.includes("ci/cd") || msg.includes("cicd") || msg.includes("intégration continue") || msg.includes("déploiement continu") || msg.includes("workflow"))
+        return "CI/CD signifie Intégration Continue & Déploiement Continu : chaque modification du code est testée et déployée automatiquement, réduisant les erreurs humaines.";
+      if (msg.includes("pipeline"))
+        return "Le pipeline : GitHub → GitHub Actions → SSH EC2 → Docker Build & Run. Chaque étape est automatisée pour fiabiliser le déploiement.";
+      if (msg.includes("test") || msg.includes("tests"))
+        return "Les tests automatiques (unitaires, d'intégration) valident le code avant le déploiement. Ils sont essentiels pour la qualité logicielle.";
+      if (msg.includes("log") || msg.includes("logs") || msg.includes("journal"))
+        return "Les logs permettent de suivre l'activité de l'application et de diagnostiquer les erreurs. Ils sont consultables sur EC2 ou via Docker.";
+      if (msg.includes("monitor") || msg.includes("monitoring") || msg.includes("surveillance"))
+        return "Le monitoring surveille la santé de l'application (CPU, RAM, disponibilité). Des outils comme CloudWatch ou Grafana peuvent être utilisés.";
+      // Docker & Conteneurs
+      if (msg.includes("docker") || msg.includes("conteneur") || msg.includes("container") || msg.includes("image docker"))
+        return "Docker isole l'application dans un conteneur, ce qui facilite le déploiement et la portabilité. L'image Docker contient tout le nécessaire pour exécuter l'app.";
+      if (msg.includes("image") && msg.includes("docker"))
+        return "Une image Docker est un modèle figé de l'application et de ses dépendances. Elle sert à créer des conteneurs identiques partout.";
+      if (msg.includes("port") || msg.includes("expose"))
+        return "Le port (ex: 3000) permet d'accéder à l'application depuis l'extérieur du conteneur. On utilise EXPOSE dans le Dockerfile.";
+      if (msg.includes("env") || msg.includes("variable d'environnement") || msg.includes("environment variable"))
+        return "Les variables d'environnement permettent de configurer l'application sans modifier le code (ex: DB_HOST, PORT).";
+      if (msg.includes("build") && msg.includes("docker"))
+        return "La commande 'docker build' crée une image à partir du Dockerfile. Elle est ensuite utilisée pour lancer le conteneur.";
+      if (msg.includes("dockerfile"))
+        return "Le Dockerfile décrit comment construire l'image Docker (base, dépendances, ports, commandes de lancement, etc.).";
+      // Node.js
+      if (msg.includes("node.js") || msg.includes("nodejs") || msg.includes("node js") || msg.includes("node"))
+        return "Node.js est le moteur JavaScript côté serveur utilisé pour cette application. Il permet de créer des API performantes.";
+      if (msg.includes("npm") || msg.includes("package.json"))
+        return "npm gère les dépendances Node.js. Le fichier package.json liste les modules nécessaires à l'application.";
+      // EC2 & Cloud
+      if (msg.includes("ec2") || msg.includes("aws") || msg.includes("cloud"))
+        return "EC2 est une machine virtuelle sur le cloud AWS qui héberge l'application. Elle est accessible à distance et scalable.";
+      if (msg.includes("ssh") || msg.includes("scp") || msg.includes("clé privée") || msg.includes("private key"))
+        return "SSH permet de se connecter à EC2 de façon sécurisée. SCP sert à transférer des fichiers. Les clés privées assurent la sécurité des accès.";
+      if (msg.includes("scaling") || msg.includes("scalabilité") || msg.includes("load balancer") || msg.includes("équilibrage"))
+        return "Le scaling permet d'adapter le nombre d'instances EC2 selon la charge. Un load balancer répartit le trafic pour garantir la disponibilité.";
+      // Sécurité
+      if (msg.includes("sécurité") || msg.includes("security") || msg.includes("pare-feu") || msg.includes("firewall") || msg.includes("permission") || msg.includes("acces"))
+        return "La sécurité repose sur SSH, le pare-feu EC2 (Security Groups), et les permissions GitHub. Il faut limiter les accès et surveiller les logs.";
+      if (msg.includes("erreur") || msg.includes("error") || msg.includes("fail") || msg.includes("bug"))
+        return "En cas d'erreur, consulte les logs Docker ou Node.js. Le pipeline CI/CD peut stopper le déploiement si un test échoue.";
+      // Déploiement & Rollback
+      if (msg.includes("déploiement") || msg.includes("deploy") || msg.includes("release"))
+        return "Le déploiement est automatisé via GitHub Actions : le code est transféré sur EC2, puis Docker build & run sont lancés.";
+      if (msg.includes("rollback") || msg.includes("retour arrière") || msg.includes("restore"))
+        return "Un rollback restaure automatiquement la version précédente si l'app échoue le health check après déploiement.";
+      if (msg.includes("script") || msg.includes("sh") || msg.includes("bash"))
+        return "Des scripts shell (sh, bash) automatisent les tâches de build, déploiement, rollback, etc. Ils sont exécutés sur EC2.";
+      // Divers & Conseils
+      if (msg.includes("documentation") || msg.includes("doc"))
+        return "La documentation explique le fonctionnement du pipeline, les scripts, et les procédures de rollback. Elle est essentielle pour la maintenance.";
+      if (msg.includes("aide") || msg.includes("help") || msg.includes("conseil") || msg.includes("astuce"))
+        return "Besoin d'aide ? Consulte la doc, les logs, ou pose une question précise sur Docker, Node.js, EC2, CI/CD, sécurité, etc.";
+      if (msg.includes("problème") || msg.includes("problèmes") || msg.includes("problème"))
+        return "Décris le problème rencontré (erreur, étape, logs) pour obtenir une aide ciblée. Vérifie aussi les logs et la configuration.";
+      // Infos personnelles
+      if (msg.includes("9502044") || msg.includes("matricule"))
+        return "Le matricule 9502044 correspond à Madani Wagué, étudiant en Master 2 Informatique à l'Université Sup'Management Mali.";
+      if (msg.includes("madani") || msg.includes("wagué") || msg.includes("wague"))
+        return "Madani Wagué est étudiant en Master 2 Informatique à l'Université Sup'Management Mali. Matricule : 9502044.";
+      if (msg.includes("master 2") || msg.includes("informatique"))
+        return "Le Master 2 Informatique est le cursus suivi par Madani Wagué (matricule 9502044) à l'Université Sup'Management Mali.";
+      // Réponse par défaut
+      return "Je peux répondre sur Docker, GitHub Actions, EC2, Node.js, CI/CD, sécurité, pipeline, logs, monitoring, tests, scripts, erreurs, déploiement, cloud, conteneur, images, ports, variables d'environnement, scaling… Essaie une autre question !";
+    }
+    
+    function resetChat() {
+      chatBox.innerHTML = "";
+      document.getElementById("chat-input").value = "";
+    }
+
+  </script>
 
   <section class="workflow-section">
     <h2>Pipeline CI/CD</h2>
@@ -288,18 +477,10 @@
     </div>
   </section>
 
-  <section class="deliverables">
-    <h2>Livrables</h2>
-    <div class="deliverable-list">
-      <div class="deliverable-item"><i class="fas fa-file-code deliverable-icon"></i><p><strong>deploy.yml</strong> – Workflow GitHub Actions</p></div>
-      <div class="deliverable-item"><i class="fas fa-docker deliverable-icon"></i><p><strong>Dockerfile</strong> & script de déploiement</p></div>
-      <div class="deliverable-item"><i class="fas fa-server deliverable-icon"></i><p><strong>Logs</strong> & documentation du rollback</p></div>
-    </div>
-  </section>
+
 
   <footer>
-    <p>Sup’Management Mali – Module Virtualisation & Cloud Computing</p>
-    <p>Encadré par Ibrahim Balako SAMAKE</p>
+    <p>Sup'Management Mali</p>
     <div class="social-links">
       <a href="https://github.com/Nidawa1789/node-docker-app" target="_blank"><i class="fab fa-github"></i></a>
     </div>
